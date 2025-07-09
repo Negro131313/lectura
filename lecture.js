@@ -25,5 +25,120 @@
       "We need to optimize our processes",
       "The results exceeded our expectations",
       "Collaboration is key to our success",
+      "Life moves forward fast",
+"Time heals all wounds",
+"Learn from your mistakes",
+"Dream big work hard",
+"Change is always coming",
+"Love conquers every fear",
+"Hope lights the darkness",
+"Books open new worlds",
+"Nature calms the soul",
+"Art speaks without words",
+"Music touches the heart",
+"Kindness costs you nothing",
+"Work with joyful passion",
+"Travel broadens your mind",
+"Think before you speak",
+"Actions speak louder now",
+"Simple things bring joy",
+"Every end brings beginnings",
+"Patience brings great rewards",
+"Health truly is wealth",
+"Honesty builds strong trust",
+"Curiosity fuels amazing discoveries",
+"Rain cleans the air",
+"Sun warms the earth",
+"Stars light night skies",
+"Children laugh with abandon",
+"Friends make life brighter",
+"Food brings people together",
+"Water flows ever downward",
+"Mountains stand so tall",
+"Seasons change without pause",
+"Technology connects us globally",
+"Silence holds deep wisdom",
+"Smiles break down walls",
+"Courage faces tough challenges",
+"Forgiveness sets you free",
+"Respect earns mutual understanding",
+"Failure teaches valuable lessons",
+"Success requires persistent effort",
+"Winter follows autumn faithfully",
+"Spring renews all life",
+"Summer shines so brightly",
+"Autumn paints leaves beautifully",
+"Snow covers everything softly",
+"Wind whispers ancient secrets",
+"Fire gives warm comfort",
+"Peace starts within yourself",
+"War solves nothing ever",
+"Education empowers young minds",
+"Science explains natural mysteries",
+"History repeats itself often",
+"Tomorrow holds new promise",
+"Today is your opportunity",
+"Yesterday has passed away",
+"Morning brings fresh starts",
+"Night hides many secrets",
+"Home is where heart",
+"Family supports each other",
+"Strength comes from within",
+"Adventure awaits brave souls",
+"Good wins over evil",
+"Darkness cannot extinguish light",
+"Problems have solutions always",
+"Imagination creates unreal worlds",
+"Focus achieves your goals",
+"Balance keeps life stable",
+"Practice makes things perfect",
+"Challenges build strong character",
+"Risk leads to rewards",
+"Effort brings sweet success",
+"Rest restores tired bodies",
+"Laughter is best medicine",
+"Tears wash away pain",
+"Stories connect past present",
+"Poetry captures deep emotions",
+"Clouds float high above",
+"Birds fly freely south",
+"Fish swim river currents",
+"Animals live wild lives",
+"Plants grow toward sun",
+"Seeds hold future forests",
+"Leaves fall each autumn",
+"Fruit ripens under sun",
+"Bees pollinate bright flowers",
+"Deserts test survival skills",
+"Oceans hold endless mysteries",
+"Rivers carve deep canyons",
+"Volcanoes sleep then erupt",
+"Earth spins around sun",
+"Moon controls ocean tides",
+"Space stretches beyond comprehension",
+"Energy cannot be destroyed",
+"Matter takes different forms"
+
     ];
     
+
+// Función para mezclar array (algoritmo Fisher-Yates)
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// USO CORRECTO:
+const randomPhrases = shuffleArray([...phrases]);
+
+// Ejemplo de implementación en tu código
+function displayRandomPhrases() {
+  const shuffled = shuffleArray([...phrases]); // Crea nueva copia mezclada
+  shuffled.forEach(phrase => console.log(phrase));
+}
+
+// Ejecutar al cargar o cuando necesites mostrar frases
+displayRandomPhrases();    
