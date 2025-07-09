@@ -1,735 +1,765 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="lecture.js"></script>
-  <title>Práctica de Pronunciación</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="lecture.js"></script>
+    <title>Práctica de Pronunciación</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #1a2a6c, #0d4d4d, #1a2a6c);
-      color: white;
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-attachment: fixed;
-    }
-    
-    .container {
-      max-width: 800px;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      border-radius: 20px;
-      padding: 30px;
-      margin: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255, 204, 0, 0.2);
-    }
-    
-    .container::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, #00cc66, #00994d);
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 15px;
-      font-size: 2.5rem;
-      color: #00cc66;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-      letter-spacing: 0.5px;
-    }
-    
-    .subtitle {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #ddd;
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-    
-    .card {
-      background: rgba(30, 30, 40, 0.85);
-      border-radius: 15px;
-      padding: 25px;
-      margin-bottom: 25px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-    }
-    
-    .card-title {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: #00cc66;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-    
-    .phrase-container {
-      font-size: 1.8rem;
-      margin: 25px 0;
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.35);
-      border-radius: 10px;
-      font-weight: 600;
-      line-height: 1.4;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      border: 1px solid rgba(0, 204, 102, 0.1);
-    }
-    
-    .target-label {
-      font-size: 1rem;
-      color: #bbb;
-      margin-bottom: 10px;
-    }
-    
-    .target-phrase {
-      font-size: 1.8rem;
-      color: #00cc66;
-      font-weight: bold;
-      text-align: center;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-      padding: 0 10px;
-    }
-    
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 25px 0;
-      flex-wrap: wrap;
-    }
-    
-    .btn {
-      background: linear-gradient(to bottom, #00cc66, #00994d);
-      color: #1a1a1a;
-      border: none;
-      border-radius: 50px;
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-    }
-    
-    .btn:active {
-      transform: translateY(1px);
-    }
-    
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -60%;
-      width: 20px;
-      height: 200%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: rotate(30deg);
-      transition: all 0.6s;
-    }
-    
-    .btn:hover::after {
-      left: 120%;
-    }
-    
-    .btn-stop {
-      background: linear-gradient(to bottom, #ff4d4d, #cc0000);
-      color: white;
-    }
-    
-    .btn-disabled {
-      background: #666;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-    
-    .status {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 15px;
-      font-size: 1.1rem;
-    }
-    
-    .permission-status {
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-weight: bold;
-      min-width: 120px;
-      text-align: center;
-    }
-    
-    .granted {
-      background: rgba(0, 150, 0, 0.35);
-      color: #4dff4d;
-      border: 1px solid rgba(77, 255, 77, 0.2);
-    }
-    
-    .denied {
-      background: rgba(150, 0, 0, 0.35);
-      color: #ff4d4d;
-      border: 1px solid rgba(255, 77, 77, 0.2);
-    }
-    
-    .phrase-controls {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-    
-    .btn-phrase {
-      background: rgba(60, 60, 100, 0.7);
-      color: #ddd;
-      padding: 10px 20px;
-      border-radius: 50px;
-      font-size: 1rem;
-      transition: all 0.2s;
-    }
-    
-    .btn-phrase:hover {
-      background: rgba(80, 80, 130, 0.8);
-      transform: translateY(-2px);
-    }
-    
-    .result-container {
-      margin-top: 25px;
-      background: rgba(40, 40, 50, 0.75);
-      padding: 25px;
-      border-radius: 15px;
-      min-height: 180px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-    }
-    
-    .listening {
-      animation: pulse 1.5s infinite;
-      color: #4dff4d;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 1.3rem;
-      flex-direction: column;
-      text-shadow: 0 0 8px rgba(77, 255, 77, 0.5);
-    }
-    
-    @keyframes pulse {
-      0% { opacity: 0.6; }
-      50% { opacity: 1; }
-      100% { opacity: 0.6; }
-    }
-    
-    .mic-icon {
-      font-size: 3rem;
-      margin-bottom: 15px;
-      animation: micPulse 2s infinite;
-    }
-    
-    @keyframes micPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    
-    #recognized {
-      color: #00cc66;
-      font-weight: bold;
-      font-size: 1.3rem;
-      display: block;
-      margin: 10px 0;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.35);
-      border-radius: 8px;
-      min-height: 60px;
-      text-align: center;
-      border: 1px solid rgba(0, 204, 102, 0.1);
-      line-height: 1.5;
-    }
-    
-    .result-score {
-      font-size: 1.4rem;
-      margin: 15px 0;
-      text-align: center;
-    }
-    
-    .result-verdict {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-    
-    .correct {
-      color: #4dff4d;
-      background: rgba(0, 100, 0, 0.35);
-      border: 1px solid rgba(77, 255, 77, 0.2);
-    }
-    
-    .incorrect {
-      color: #ff4d4d;
-      background: rgba(100, 0, 0, 0.35);
-      border: 1px solid rgba(255, 77, 77, 0.2);
-    }
-    
-    .visual-feedback {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 8px;
-      background: transparent;
-      z-index: 10;
-      transition: background 0.5s;
-    }
-    
-    .attempt-counter {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-    }
-    
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 2.1rem;
-      }
-      
-      .container {
-        padding: 20px 15px;
-      }
-      
-      .target-phrase {
-        font-size: 1.6rem;
-      }
-      
-      .btn {
-        padding: 12px 24px;
-        font-size: 1.05rem;
-      }
-      
-      .phrase-container {
-        padding: 15px;
-        min-height: 110px;
-      }
-      
-      .card-title {
-        font-size: 1.3rem;
-      }
-    }
-    
-    .instructions {
-      background: rgba(0, 60, 120, 0.55);
-      padding: 20px;
-      margin-top: 25px;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    
-    .instructions h3 {
-      color: #00cc66;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    
-    .instructions ul {
-      padding-left: 20px;
-      margin-top: 10px;
-    }
-    
-    .instructions li {
-      margin-bottom: 8px;
-      position: relative;
-      padding-left: 25px;
-    }
-    
-    .instructions li::before {
-      content: "•";
-      color: #00cc66;
-      font-size: 1.5rem;
-      position: absolute;
-      left: 0;
-      top: -5px;
-    }
-  </style>
+    <style>
+        /* ... (Tu CSS existente aquí, no hay cambios necesarios) ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #0d4d4d, #1a2a6c);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00cc66, #00994d);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            color: #00cc66;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.5px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ddd;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: rgba(30, 30, 40, 0.85);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #00cc66;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .phrase-container {
+            font-size: 1.8rem;
+            margin: 25px 0;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 10px;
+            font-weight: 600;
+            line-height: 1.4;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 1px solid rgba(0, 204, 102, 0.1);
+        }
+        
+        .target-label {
+            font-size: 1rem;
+            color: #bbb;
+            margin-bottom: 10px;
+        }
+        
+        .target-phrase {
+            font-size: 1.8rem;
+            color: #00cc66;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            padding: 0 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(to bottom, #00cc66, #00994d);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+            transition: all 0.6s;
+        }
+        
+        .btn:hover::after {
+            left: 120%;
+        }
+        
+        .btn-stop {
+            background: linear-gradient(to bottom, #ff4d4d, #cc0000);
+            color: white;
+        }
+        
+        .btn-disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .permission-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .granted {
+            background: rgba(0, 150, 0, 0.35);
+            color: #4dff4d;
+            border: 1px solid rgba(77, 255, 77, 0.2);
+        }
+        
+        .denied {
+            background: rgba(150, 0, 0, 0.35);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.2);
+        }
+        
+        .phrase-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-phrase {
+            background: rgba(60, 60, 100, 0.7);
+            color: #ddd;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-phrase:hover {
+            background: rgba(80, 80, 130, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .result-container {
+            margin-top: 25px;
+            background: rgba(40, 40, 50, 0.75);
+            padding: 25px;
+            border-radius: 15px;
+            min-height: 180px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .listening {
+            animation: pulse 1.5s infinite;
+            color: #4dff4d;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            flex-direction: column;
+            text-shadow: 0 0 8px rgba(77, 255, 77, 0.5);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        .mic-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: micPulse 2s infinite;
+        }
+        
+        @keyframes micPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        #recognized {
+            color: #00cc66;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: block;
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 8px;
+            min-height: 60px;
+            text-align: center;
+            border: 1px solid rgba(0, 204, 102, 0.1);
+            line-height: 1.5;
+        }
+        
+        .result-score {
+            font-size: 1.4rem;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .result-verdict {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .correct {
+            color: #4dff4d;
+            background: rgba(0, 100, 0, 0.35);
+            border: 1px solid rgba(77, 255, 77, 0.2);
+        }
+        
+        .incorrect {
+            color: #ff4d4d;
+            background: rgba(100, 0, 0, 0.35);
+            border: 1px solid rgba(255, 77, 77, 0.2);
+        }
+        
+        .visual-feedback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: transparent;
+            z-index: 10;
+            transition: background 0.5s;
+        }
+        
+        .attempt-counter {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.1rem;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .target-phrase {
+                font-size: 1.6rem;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+                font-size: 1.05rem;
+            }
+            
+            .phrase-container {
+                padding: 15px;
+                min-height: 110px;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+            }
+        }
+        
+        .instructions {
+            background: rgba(0, 60, 120, 0.55);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .instructions h3 {
+            color: #00cc66;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .instructions li::before {
+            content: "•";
+            color: #00cc66;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎤 Práctica de Pronunciación</h1>
-    <p class="subtitle">Retroalimentación visual instantánea</p>
-    
-    <div class="card">
-      <div class="card-title">
-        🎯 Frase para practicar
-      </div>
-      <div class="phrase-container">
-        <div class="target-label">Pronuncia esta frase en inglés:</div>
-        <div class="target-phrase" id="target-phrase">They are scaling back the marketing budget.</div>
-        <div class="visual-feedback" id="visual-feedback"></div>
-        <div class="attempt-counter" id="attempt-counter">Intento: 1/2</div>
-      </div>
-      <div class="phrase-controls">
-        <button class="btn btn-phrase" id="new-phrase-btn">
-          🔄 Nueva Frase
-        </button>
-      </div>
+    <div class="container">
+        <h1>🎤 Práctica de Pronunciación</h1>
+        <p class="subtitle">Retroalimentación visual instantánea</p>
+        
+        <div class="card">
+            <div class="card-title">
+                🎯 Frase para practicar
+            </div>
+            <div class="phrase-container">
+                <div class="target-label">Pronuncia esta frase en inglés:</div>
+                <div class="target-phrase" id="target-phrase"></div>
+                <div class="visual-feedback" id="visual-feedback"></div>
+                <div class="attempt-counter" id="attempt-counter">Intento: 1/2</div>
+            </div>
+            <div class="phrase-controls">
+                <button class="btn btn-phrase" id="new-phrase-btn">
+                    🔄 Nueva Frase
+                </button>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="start-btn">
+                🎤 Iniciar Reconocimiento
+            </button>
+            <button class="btn btn-stop" id="stop-btn" disabled>
+                🛑 Detener Reconocimiento
+            </button>
+        </div>
+        
+        <div class="status">
+            <span>Estado de permisos:</span>
+            <span class="permission-status" id="permission-status">No solicitado</span>
+        </div>
+        
+        <div class="result-container">
+            <div id="result">Presiona "Iniciar Reconocimiento" para comenzar</div>
+        </div>
     </div>
     
-    <div class="controls">
-      <button class="btn" id="start-btn">
-        🎤 Iniciar Reconocimiento
-      </button>
-      <button class="btn btn-stop" id="stop-btn" disabled>
-        🛑 Detener Reconocimiento
-      </button>
-    </div>
-    
-    <div class="status">
-      <span>Estado de permisos:</span>
-      <span class="permission-status" id="permission-status">No solicitado</span>
-    </div>
-    
-    <div class="result-container">
-      <div id="result">Presiona "Iniciar Reconocimiento" para comenzar</div>
-    </div>
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // **IMPORTANTE:** Asegúrate de que 'phrases' esté definido en 'lecture.js' como un array global.
+            // Ejemplo en lecture.js:
+            // const phrases = [
+            //     "They are scaling back the marketing budget.",
+            //     "The quick brown fox jumps over the lazy dog.",
+            //     "How much wood would a woodchuck chuck if a woodchuck could chuck wood?"
+            // ];
 
-  <script>
-    // Al inicio del script
-const PROGRESS_KEY = "pronunciation_progress";
-let completedPhrases = JSON.parse(localStorage.getItem(PROGRESS_KEY)) || [];
-    // Elementos del DOM
-    const targetPhraseEl = document.getElementById("target-phrase");
-    const resultDiv = document.getElementById("result");
-    const permissionStatus = document.getElementById("permission-status");
-    const startBtn = document.getElementById("start-btn");
-    const stopBtn = document.getElementById("stop-btn");
-    const newPhraseBtn = document.getElementById("new-phrase-btn");
-    
-    
-    // Configuración inicial
-    let targetPhrase = phrases[0].toLowerCase();
-    const minThreshold = 50; // Umbral fijo en 50% (no visible)
-    let isListening = false;
-    let recognition = null;
-    let permissionGranted = false;
-    let attemptCount = 0; // Contador de intentos
+            if (typeof phrases === 'undefined' || !Array.isArray(phrases) || phrases.length === 0) {
+                document.getElementById("result").innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Error: No se encontraron frases para practicar. Asegúrate de que 'lecture.js' esté correctamente cargado y contenga un array de frases llamado 'phrases'.</div>`;
+                document.getElementById("start-btn").disabled = true;
+                document.getElementById("new-phrase-btn").disabled = true;
+                return;
+            }
 
-    // Mostrar frase objetivo
-    targetPhraseEl.textContent = phrases[0];
-    
-    // Actualizar estado de permisos
-    function updatePermissionStatus() {
-      if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: 'microphone' }).then(permissionStatusObj => {
-          permissionStatusObj.onchange = () => updatePermissionStatus();
-          
-          const status = permissionStatusObj.state;
-          permissionStatus.textContent = 
-            status === 'granted' ? 'Concedido' : 
-            status === 'denied' ? 'Denegado' : 'No decidido';
+            const PROGRESS_KEY = "pronunciation_progress";
+            let completedPhrases = JSON.parse(localStorage.getItem(PROGRESS_KEY)) || [];
+
+            // Elementos del DOM
+            const targetPhraseEl = document.getElementById("target-phrase");
+            const resultDiv = document.getElementById("result");
+            const permissionStatusEl = document.getElementById("permission-status");
+            const startBtn = document.getElementById("start-btn");
+            const stopBtn = document.getElementById("stop-btn");
+            const newPhraseBtn = document.getElementById("new-phrase-btn");
+            const attemptCounterEl = document.getElementById('attempt-counter');
+            const visualFeedbackEl = document.getElementById('visual-feedback');
+
+            // Configuración inicial
+            let currentTargetPhrase = ""; // Se inicializará con getRandomPhrase
+            const minThreshold = 50; // Umbral fijo en 50%
+            let isListening = false;
+            let recognition = null;
+            let attemptCount = 0;
+
+            /**
+             * Actualiza el estado de los permisos del micrófono en la UI.
+             */
+            function updatePermissionStatus() {
+                if (navigator.permissions && navigator.permissions.query) {
+                    navigator.permissions.query({ name: 'microphone' }).then(permissionStatusObj => {
+                        permissionStatusObj.onchange = updatePermissionStatus;
+
+                        const status = permissionStatusObj.state;
+                        permissionStatusEl.textContent =
+                            status === 'granted' ? 'Concedido' :
+                            status === 'denied' ? 'Denegado' : 'No decidido';
+
+                        permissionStatusEl.className =
+                            status === 'granted' ? 'permission-status granted' :
+                            status === 'denied' ? 'permission-status denied' : 'permission-status';
+
+                        // Habilita/deshabilita el botón de inicio según el permiso
+                        if (status === 'denied') {
+                            startBtn.disabled = true;
+                            resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Permiso de micrófono denegado. Por favor, habilítalo en la configuración de tu navegador para usar esta función.</div>`;
+                        } else if (status === 'granted' && !isListening) {
+                             startBtn.disabled = false;
+                        }
+
+                    }).catch(() => {
+                        permissionStatusEl.textContent = "API no soportada";
+                        startBtn.disabled = true; // Deshabilita si la API no es soportada
+                    });
+                } else {
+                    permissionStatusEl.textContent = "API no soportada";
+                    startBtn.disabled = true; // Deshabilita si la API no es soportada
+                }
+            }
+
+            /**
+             * Obtiene una nueva frase aleatoria de las frases disponibles (no completadas).
+             */
+            function getRandomPhrase() {
+                const availablePhrases = phrases.filter(phrase =>
+                    !completedPhrases.includes(phrase.toLowerCase())
+                );
+
+                if (availablePhrases.length === 0) {
+                    targetPhraseEl.textContent = "¡Felicidades! Has completado todas las frases 🎉";
+                    startBtn.disabled = true;
+                    newPhraseBtn.disabled = true; // Deshabilita el botón "Nueva Frase"
+                    stopBtn.disabled = true;
+                    resultDiv.innerHTML = "<div style='color:#00cc66; text-align:center;'>¡Has dominado todas las frases!</div>";
+                    return;
+                }
+
+                const randomIndex = Math.floor(Math.random() * availablePhrases.length);
+                currentTargetPhrase = availablePhrases[randomIndex].toLowerCase();
+                targetPhraseEl.textContent = availablePhrases[randomIndex];
+                attemptCount = 0;
+                attemptCounterEl.textContent = "Intento: 1/2";
+                resultDiv.innerHTML = "Presiona \"Iniciar Reconocimiento\" para comenzar";
+                visualFeedbackEl.style.background = "transparent"; // Reinicia el feedback visual
+                startBtn.disabled = false; // Asegura que el botón de inicio esté habilitado para la nueva frase
+            }
+
+            /**
+             * Inicializa el objeto de reconocimiento de voz.
+             */
+            function initRecognition() {
+                if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+                    resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Tu navegador no soporta la API de Reconocimiento de Voz.</div>`;
+                    startBtn.disabled = true;
+                    return;
+                }
+
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+                recognition.continuous = false;
+
+                recognition.onstart = function() {
+                    isListening = true;
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    resultDiv.innerHTML = `
+                        <div class="listening">
+                            <div class="mic-icon">🎤</div>
+                            Escuchando... ¡Habla ahora!
+                        </div>
+                    `;
+                    visualFeedbackEl.style.background = "rgba(0, 204, 102, 0.3)"; // Brillo verde al escuchar
+                };
+
+                recognition.onresult = function(event) {
+                    const spoken = event.results[0][0].transcript.toLowerCase();
+                    const score = getSimilarityPercentage(spoken, currentTargetPhrase);
+                    const accepted = score >= minThreshold;
+
+                    attemptCount++;
+                    attemptCounterEl.textContent = `Intento: ${attemptCount}/2`;
+
+                    visualFeedbackEl.style.background = accepted ? "rgba(0, 204, 102, 0.7)" : "rgba(255, 77, 77, 0.7)"; // Color del feedback visual
+
+                    resultDiv.innerHTML = `
+                        <div class="result-title">Frase reconocida:</div>
+                        <div id="recognized">"${spoken}"</div>
+                        
+                        <div class="result-score">Porcentaje de coincidencia: <strong>${score}%</strong></div>
+                        
+                        <div class="result-verdict ${accepted ? 'correct' : 'incorrect'}">
+                            ${accepted ? '✔ Correcto - ¡Buen trabajo!' : '✘ Incorrecto - ¡Sigue practicando!'}
+                        </div>
+                    `;
+
+                    isListening = false;
+                    startBtn.disabled = false;
+                    stopBtn.disabled = true;
+
+                    if (accepted) {
+                        if (!completedPhrases.includes(currentTargetPhrase)) {
+                            completedPhrases.push(currentTargetPhrase);
+                            localStorage.setItem(PROGRESS_KEY, JSON.stringify(completedPhrases));
+                        }
+                        setTimeout(() => {
+                            getRandomPhrase(); // Carga la siguiente frase automáticamente
+                            resultDiv.innerHTML = "<div style='color:#00cc66; text-align:center;'>✅ ¡Correcto! Cargando nueva frase...</div>";
+                        }, 1500);
+                    } else if (attemptCount < 2) {
+                        setTimeout(() => {
+                            resultDiv.innerHTML = `
+                                <div class="listening">
+                                    <div class="mic-icon">🎤</div>
+                                    Segundo intento: Escuchando... ¡Habla nuevamente!
+                                </div>
+                            `;
+                            startRecognition();
+                        }, 1000);
+                    } else {
+                        // Dos intentos fallidos, reinicia el contador de intentos y la frase
+                        attemptCount = 0;
+                        attemptCounterEl.textContent = `Intento: 1/2`;
+                        setTimeout(() => {
+                            resultDiv.innerHTML = `<div style="color:#ffcc00; text-align:center;">Demasiados intentos. Intenta con una nueva frase o repite la actual.</div>`;
+                        }, 1000);
+                        visualFeedbackEl.style.background = "transparent";
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    let errorMessage = "Error desconocido al reconocer la voz.";
+                    switch(event.error) {
+                        case 'not-allowed':
+                        case 'permission-denied':
+                            errorMessage = "Permiso denegado. Por favor, habilita el micrófono en la configuración de tu navegador.";
+                            break;
+                        case 'no-speech':
+                            errorMessage = "No se detectó voz. Intenta de nuevo, hablando más claro o más alto.";
+                            break;
+                        case 'audio-capture':
+                            errorMessage = "No se encontró un dispositivo de micrófono. Asegúrate de que esté conectado y configurado.";
+                            break;
+                        case 'network':
+                            errorMessage = "Error de red en el servicio de reconocimiento. Verifica tu conexión a Internet.";
+                            break;
+                        default:
+                            errorMessage = `Error de reconocimiento: ${event.error}.`;
+                    }
+                    
+                    resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ ${errorMessage}</div>`;
+                    isListening = false;
+                    startBtn.disabled = false;
+                    stopBtn.disabled = true;
+                    visualFeedbackEl.style.background = "transparent";
+                    updatePermissionStatus();
+                };
+                
+                recognition.onend = function() {
+                    if (isListening) { // Solo si se detuvo automáticamente y no por un error
+                        resultDiv.innerHTML = "<div style='color:#ffcc00; text-align:center;'>🛑 Reconocimiento finalizado automáticamente.</div>";
+                    }
+                    isListening = false;
+                    startBtn.disabled = false;
+                    stopBtn.disabled = true;
+                    visualFeedbackEl.style.background = "transparent";
+                };
+                
+                startRecognition();
+            }
+
+            function startRecognition() {
+                if (!recognition) {
+                    resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Error: Reconocimiento no inicializado.</div>`;
+                    return;
+                }
+                // Si ya está escuchando o el botón de inicio está deshabilitado, no hagas nada
+                if (isListening || startBtn.disabled) return;
+
+                try {
+                    recognition.start();
+                } catch (error) {
+                    resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Error al intentar iniciar el reconocimiento: ${error.message}. Asegúrate de haber concedido los permisos.</div>`;
+                    console.error("Error al iniciar reconocimiento:", error);
+                    startBtn.disabled = true; // Deshabilita el botón si hay un error al iniciar
+                }
+            }
             
-          permissionStatus.className = 
-            status === 'granted' ? 'permission-status granted' : 
-            status === 'denied' ? 'permission-status denied' : 'permission-status';
+            function stopRecognition() {
+                if (recognition && isListening) {
+                    recognition.stop();
+                    resultDiv.innerHTML = "<div style='color:#ffcc00; text-align:center;'>🛑 Reconocimiento detenido manualmente.</div>";
+                    isListening = false;
+                    startBtn.disabled = false;
+                    stopBtn.disabled = true;
+                    visualFeedbackEl.style.background = "transparent";
+                }
+            }
             
-          permissionGranted = status === 'granted';
-        }).catch(() => {
-          permissionStatus.textContent = "API no soportada";
+            // Cálculo de similitud entre cadenas (algoritmo Levenshtein)
+            function getSimilarityPercentage(str1, str2) {
+                const longer = str1.length > str2.length ? str1 : str2;
+                const shorter = str1.length > str2.length ? str2 : str1;
+                const longerLength = longer.length;
+                
+                if (longerLength === 0) return 100; // Ambas cadenas están vacías, son 100% similares
+                
+                const distance = levenshtein(longer, shorter);
+                return Math.round((1 - distance / longerLength) * 100);
+            }
+            
+            // Algoritmo de distancia Levenshtein
+            function levenshtein(a, b) {
+                const matrix = [];
+                
+                // Incrementa todas las celdas en la primera columna
+                for (let i = 0; i <= b.length; i++) {
+                    matrix[i] = [i];
+                }
+                
+                // Incrementa todas las celdas en la primera fila
+                for (let j = 0; j <= a.length; j++) {
+                    matrix[0][j] = j;
+                }
+                
+                // Llena el resto de la matriz
+                for (let i = 1; i <= b.length; i++) {
+                    for (let j = 1; j <= a.length; j++) {
+                        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                            matrix[i][j] = matrix[i - 1][j - 1];
+                        } else {
+                            matrix[i][j] = Math.min(
+                                matrix[i - 1][j - 1] + 1, // Sustitución
+                                matrix[i][j - 1] + 1,     // Inserción
+                                matrix[i - 1][j] + 1      // Eliminación
+                            );
+                        }
+                    }
+                }
+                
+                return matrix[b.length][a.length];
+            }
+            
+            // Configurar eventos
+            startBtn.addEventListener('click', () => {
+                if (!recognition) {
+                    initRecognition();
+                } else {
+                    startRecognition();
+                }
+            });
+            
+            stopBtn.addEventListener('click', () => {
+                stopRecognition();
+            });
+            
+            newPhraseBtn.addEventListener('click', () => {
+                getRandomPhrase();
+            });
+            
+            // Inicializar el estado de permisos y la primera frase al cargar la página
+            updatePermissionStatus();
+            getRandomPhrase(); // <-- Llama a esta función para establecer la primera frase aleatoria
         });
-      } else {
-        permissionStatus.textContent = "API no soportada";
-      }
-    }
-    
-    // Obtener una nueva frase aleatoria
-  function getRandomPhrase() {
-    // Filtrar frases no completadas
-    const availablePhrases = phrases.filter(phrase => 
-        !completedPhrases.includes(phrase.toLowerCase())
-    );
-
-    if (availablePhrases.length === 0) {
-        targetPhraseEl.textContent = "¡Felicidades! Has completado todas las frases 🎉";
-        startBtn.disabled = true;
-        return;
-    }
-
-    const randomIndex = Math.floor(Math.random() * availablePhrases.length);
-    const randomPhrase = availablePhrases[randomIndex];
-    targetPhrase = randomPhrase.toLowerCase();
-    targetPhraseEl.textContent = randomPhrase;
-    attemptCount = 0;
-    document.getElementById('attempt-counter').textContent = "Intento: 1/2";
-}
-    // Configurar eventos
-    startBtn.addEventListener('click', () => {
-      if (!recognition) {
-        initRecognition();
-      } else {
-        startRecognition();
-      }
-    });
-    
-    stopBtn.addEventListener('click', () => {
-      stopRecognition();
-      document.getElementById('visual-feedback').style.background = "transparent";
-    });
-    
-    newPhraseBtn.addEventListener('click', () => {
-      getRandomPhrase();
-    });
-    
-    // Inicializar el objeto de reconocimiento
-    function initRecognition() {
-      if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
-        resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Tu navegador no soporta la API de Reconocimiento de Voz.</div>`;
-        startBtn.disabled = true;
-        return;
-      }
-
-      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = 'en-US';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-      recognition.continuous = false;
-
-      recognition.onstart = function() {
-        isListening = true;
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        resultDiv.innerHTML = `
-          <div class="listening">
-            <div class="mic-icon">🎤</div>
-            Escuchando... Habla ahora!
-          </div>
-        `;
-      };
-      
-      recognition.onresult = function(event) {
-        const spoken = event.results[0][0].transcript.toLowerCase();
-        const score = getSimilarityPercentage(spoken, targetPhrase);
-        
-        // Umbral fijo en 50%
-        const accepted = score >= minThreshold;
-        
-        // Actualizar contador de intentos
-        attemptCount++;
-        document.getElementById('attempt-counter').textContent = `Intento: ${attemptCount}/2`;
-        
-        // Mostrar retroalimentación visual
-        const visualFeedback = document.getElementById('visual-feedback');
-        
-        // Dentro de recognition.onresult (cuando accepted es true)
-if (accepted) {
-    // Agregar a frases completadas
-    if (!completedPhrases.includes(targetPhrase)) {
-        completedPhrases.push(targetPhrase);
-        localStorage.setItem(PROGRESS_KEY, JSON.stringify(completedPhrases));
-    }
-
-    setTimeout(() => {
-        getRandomPhrase();
-        resultDiv.innerHTML = "<div style='color:#00cc66; text-align:center;'>✅ Correcto! Cargando nueva frase...</div>";
-    }, 1500);
-}
-        
-        resultDiv.innerHTML = `
-          <div class="result-title">Frase reconocida:</div>
-          <div id="recognized">"${spoken}"</div>
-          
-          <div class="result-score">Porcentaje de coincidencia: <strong>${score}%</strong></div>
-          
-          <div class="result-verdict ${accepted ? 'correct' : 'incorrect'}">
-            ${accepted ? '✔ Correcto - ¡Buen trabajo!' : '✘ Incorrecto - Sigue practicando!'}
-          </div>
-        `;
-        
-        isListening = false;
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-        
-        // Manejo de transiciones entre frases
-        if (accepted) {
-          // Frase correcta: pasar a siguiente después de 1.5 segundos
-          setTimeout(() => {
-            getRandomPhrase();
-            resultDiv.innerHTML = "<div style='color:#00cc66; text-align:center;'>✅ Correcto! Cargando nueva frase...</div>";
-          }, 1500);
-        } else if (attemptCount < 2) {
-          // Segundo intento después de 1 segundo
-          setTimeout(() => {
-            resultDiv.innerHTML = `
-              <div class="listening">
-                <div class="mic-icon">🎤</div>
-                Segundo intento: Escuchando... Habla nuevamente!
-              </div>
-            `;
-            startRecognition();
-          }, 1000);
-        } else {
-          // Dos intentos fallidos, reiniciar contador
-          attemptCount = 0;
-          document.getElementById('attempt-counter').textContent = `Intento: 1/2`;
-        }
-      };
-      
-      recognition.onerror = function(event) {
-        let errorMessage = "Error desconocido al reconocer la voz.";
-        switch(event.error) {
-          case 'not-allowed':
-          case 'permission-denied':
-            errorMessage = "Permiso denegado. Por favor, habilita el micrófono en la configuración de tu navegador.";
-            break;
-          case 'no-speech':
-            errorMessage = "No se detectó voz. Intenta de nuevo, hablando más claro o más alto.";
-            break;
-          case 'audio-capture':
-            errorMessage = "No se encontró un dispositivo de micrófono. Asegúrate de que esté conectado y configurado.";
-            break;
-          case 'network':
-            errorMessage = "Error de red en el servicio de reconocimiento. Verifica tu conexión a Internet.";
-            break;
-          default:
-            errorMessage = `Error de reconocimiento: ${event.error}.`;
-        }
-        
-        resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ ${errorMessage}</div>`;
-        isListening = false;
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-        updatePermissionStatus();
-      };
-      
-      recognition.onend = function() {
-        if (isListening) {
-          resultDiv.innerHTML = "<div style='color:#ffcc00; text-align:center;'>🛑 Reconocimiento finalizado automáticamente.</div>";
-        }
-        isListening = false;
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-      };
-      
-      startRecognition();
-    }
-    
-    function startRecognition() {
-      if (!recognition) {
-        resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Error: Reconocimiento no inicializado.</div>`;
-        return;
-      }
-      if (isListening) return;
-
-      try {
-        recognition.start();
-      } catch (error) {
-        resultDiv.innerHTML = `<div style="color:#ff6b6b; font-weight:bold; text-align:center;">❌ Error al intentar iniciar el reconocimiento: ${error.message}. Asegúrate de haber concedido los permisos.</div>`;
-        console.error("Error al iniciar reconocimiento:", error);
-      }
-    }
-    
-    function stopRecognition() {
-      if (recognition && isListening) {
-        recognition.stop();
-        resultDiv.innerHTML = "<div style='color:#ffcc00; text-align:center;'>🛑 Reconocimiento detenido manualmente.</div>";
-        isListening = false;
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-        document.getElementById('visual-feedback').style.background = "transparent";
-      }
-    }
-    
-    // Cálculo de similitud entre cadenas (algoritmo Levenshtein)
-    function getSimilarityPercentage(str1, str2) {
-      const longer = str1.length > str2.length ? str1 : str2;
-      const shorter = str1.length > str2.length ? str2 : str1;
-      const longerLength = longer.length;
-      
-      if (longerLength === 0) return 100;
-      
-      const distance = levenshtein(longer, shorter);
-      return Math.round((1 - distance / longerLength) * 100);
-    }
-    
-    // Algoritmo de distancia Levenshtein
-    function levenshtein(a, b) {
-      const matrix = [];
-      
-      for (let i = 0; i <= b.length; i++) {
-        matrix[i] = [i];
-      }
-      
-      for (let j = 0; j <= a.length; j++) {
-        matrix[0][j] = j;
-      }
-      
-      for (let i = 1; i <= b.length; i++) {
-        for (let j = 1; j <= a.length; j++) {
-          if (b.charAt(i - 1) === a.charAt(j - 1)) {
-            matrix[i][j] = matrix[i - 1][j - 1];
-          } else {
-            matrix[i][j] = Math.min(
-              matrix[i - 1][j - 1] + 1,
-              matrix[i][j - 1] + 1,
-              matrix[i - 1][j] + 1
-            );
-          }
-        }
-      }
-      
-      return matrix[b.length][a.length];
-    }
-    
-    // Inicializar el estado de permisos al cargar la página
-    updatePermissionStatus();
-  </script>
+    </script>
 </body>
 </html>
